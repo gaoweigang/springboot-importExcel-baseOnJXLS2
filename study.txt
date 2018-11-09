@@ -1,4 +1,6 @@
-模拟50w条Excel数据导入
+模拟10M的Excel数据导入，这里用文件大小来说明比较准确，而不是记录条数
 
-后续：
+1.使用Spring进行文件导入的时候会有文件大小限制，默认大小为10485760字节，如果超出这个大小，会报如下异常：
+FileUploadBase$SizeLimitExceededException: the request was rejected because its size (17869943) exceeds the configured maximum (10485760)
+
 

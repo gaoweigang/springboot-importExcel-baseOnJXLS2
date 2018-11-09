@@ -1,0 +1,43 @@
+参考：https://blog.csdn.net/shi0299/article/details/69525848/
+springboot上传文件大小的配置我这里记录两种，一种是设置在配置文件里只有两行代码，一种是加个Bean
+
+ 
+首先第一种：
+application.properties中添加，如下：
+spring.http.multipart.maxFileSize=10MB
+spring.http.multipart.maxRequestSize=10MB
+ 
+说明：
+maxFileSize 是单个文件大小
+maxRequestSize是设置总上传的数据大小
+根据自己需求定义吧，Mb和Kb都可以，大小写也都随意，Long字节应该可以的
+
+另外这是MultipartConfigFactory类中的转换，可以瞅一眼
+private long parseSize(String size) {
+    Assert.hasLength(size, "Size must not be empty");
+    size = size.toUpperCase();
+    return size.endsWith("KB")?Long.valueOf(size.substring(0, size.length() - 2)).longValue() * 1024L:(size.endsWith("MB")?Long.valueOf(size.substring(0, size.length() - 2)).longValue() * 1024L * 1024L:Long.valueOf(size).longValue());
+}
+ 
+ 
+
+第二种：
+增加Bean配置，注意当前类上需要加注解@Configuration，不然扫不到就不会起作用了。
+
+/**
+ * 文件上传配置
+ * @return
+ */
+@Bean
+public MultipartConfigElement multipartConfigElement() {
+    MultipartConfigFactory factory = new MultipartConfigFactory();
+    //文件最大
+    factory.setMaxFileSize("10240KB"); //KB,MB
+    /// 设置总上传数据总大小
+    factory.setMaxRequestSize("102400KB");
+    return factory.createMultipartConfig();
+}
+
+一般配置就放在启动类中就好了
+
+
